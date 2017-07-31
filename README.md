@@ -1,4 +1,4 @@
-# dimedbpy: Python wrapper for the DimeDB REST API.
+# dimedbpy: Python wrapper for DIMEdb's REST API
 
 dimedbyp provides a way to interact with the DIMEdb web service in Python. It provides metabolite queries by name, structure, and adduct information.
 
