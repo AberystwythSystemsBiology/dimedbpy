@@ -45,4 +45,5 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
     return metabolites
 
 if __name__ == "__main__":
-    print get_metabolites("DOUMFZQKYFQNTF-WUTVXBCWSA-N", as_dataframe=True)
+    metabolites = get_metabolites("DOUMFZQKYFQNTF-WUTVXBCWSA-N", as_dataframe=True)
+    print metabolites
