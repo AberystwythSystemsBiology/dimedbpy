@@ -1,6 +1,6 @@
 # dimedbpy: Python wrapper for DIMEdb's REST API
 
-dimedbyp provides a way to interact with the DIMEdb web service in Python. It provides metabolite queries by name, structure, and adduct information.
+dimedbpy provides a way to interact with the DIMEdb web service in Python. It provides metabolite queries by name, structure, and adduct information.
 
 Here's a quick example, showing how to retrieve metabolites by id (InChIKey):
 
