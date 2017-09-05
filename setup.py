@@ -9,4 +9,5 @@ setup(
     author='Keiron OShea',
     author_email = 'keo7@aber.ac.uk',
     description = 'Python wrapper for DIMEdb\'s REST API',
+    install_requires=['requests']
 )
