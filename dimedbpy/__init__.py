@@ -86,9 +86,3 @@ def mass_search(mass, polarity, tolerance, adducts=None, as_dataframe=False):
         return metabolites
     else:
         return []
-
-
-if __name__ == "__main__":
-    metabolites = mass_search(100, "Negative", 0.05, adducts=["[M-H]1-"])
-    for metabolite in metabolites:
-        print metabolite.adducts
