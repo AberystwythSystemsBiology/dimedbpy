@@ -64,4 +64,5 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False, polari
     return metabolites
 
 if __name__ == "__main__":
-    metabolites = get_metabolites("adduct", 193.03)
+    metabolites = get_metabolites("name", "Caffeine")
+    print metabolites[0]
