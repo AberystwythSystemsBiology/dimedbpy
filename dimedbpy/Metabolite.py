@@ -5,6 +5,7 @@ class Metabolite(object):
         self._physicochemical_properties = self._record["Physicochemical Properties"]
         self._external_sources = self._record["External Sources"]
         self._pathways = self._record["Pathways"]
+        self.adducts = self._record["Adducts"]
 
     @property
     def _id(self):
