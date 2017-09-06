@@ -1,3 +1,5 @@
+from methods import _get_json
+
 class Metabolite(object):
     def __init__(self, record):
         self._record = record
@@ -148,8 +150,24 @@ class Metabolite(object):
     def structure_url(self):
         return "http://dimedb.ibers.aber.ac.uk/view/structure/%(id)s" % dict(id=self._id)
 
-    def to_dict(self):
-        return self._record
+    def to_dict(self, flat=True, properties=[]):
+        if flat == True:
+            flat = self._identification_info
+            flat.update(self._physicochemical_properties)
+            flat.update(self._external_sources)
+            if len(properties) > 0:
+                flat = {p: flat[p] for p in properties}
+            return flat
+        else:
+            return self._record
+
+    @classmethod
+    def from_inchikey(cls, inchikey):
+        try:
+            return Metabolite(_get_json("inchikey", inchikey)[0])
+        except IndexError, e:
+            import warnings
+            warnings.warn("Incorrect identifier, no metabolite returned!")
 
     def __repr__(self):
         return "Metabolite(%s)" % self._id
