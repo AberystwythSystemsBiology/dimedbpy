@@ -2,3 +2,4 @@
 setup.py
 dimedbpy/Metabolite.py
 dimedbpy/__init__.py
+dimedbpy/methods.py
