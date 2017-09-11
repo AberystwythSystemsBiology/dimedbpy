@@ -1,5 +1,5 @@
+import requests, pandas as pd
 
-import requests
 
 PROPERTY_MAP = {
     'inchikey': '"_id"',
@@ -36,6 +36,5 @@ def _get_json(identifier, namespace,):
     except Exception, e:
         return []
 
-def _metabolites_to_frame(metabolites):
-    import pandas as pd
-    return pd.DataFrame.from_records([m.to_dict() for m in metabolites], index="_id")
+def _metabolites_to_frame(metabolites, properties=["_id", "Name", "Molecular Formula"]):
+    return pd.DataFrame.from_records([m.to_dict(properties=properties) for m in metabolites], index="_id")

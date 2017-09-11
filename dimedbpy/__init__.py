@@ -6,7 +6,8 @@ https://github.com/KeironO/dimedbpy
 '''
 
 from Metabolite import Metabolite
-import methods
+import methods, click
+from prettytable import PrettyTable
 
 def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
     results = methods._get_json(identifier, namespace)
@@ -16,7 +17,12 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
     return metabolites
 
 
+@click.command()
+@click.option("--mass", default=300, help="Mass-to-ion (m/z)", type=float)
+@click.option("--polarity", default="Neutral", help="Polarity/Ionisation (Positive, Negative, Neutral)", type=str)
+@click.option("--tolerance", default=0.25, help="+/- m/z tolerance")
 def mass_search(mass, polarity, tolerance, adducts=None, as_dataframe=False):
+
     gte = mass - tolerance
     lte = mass + tolerance
 
@@ -40,6 +46,18 @@ def mass_search(mass, polarity, tolerance, adducts=None, as_dataframe=False):
     response = methods._request(sp=sp, projection=projection)
     if response.status_code == 200:
         metabolites = [Metabolite(r) for r in response.json()["_items"] if r!= None]
+        if as_dataframe == True:
+            metabolites = methods._metabolites_to_frame(metabolites)
+        pretty_table = PrettyTable()
+        pretty_table._set_field_names(["InChIKey", "Name", "Molecular Formula"])
+        for m in metabolites:
+            pretty_table.add_row([m._id, m.name, m.molecular_formula])
+
+        click.echo("Mass-to-ion: %(m)s, Polarity: %(p)s, Tolerance: %(t)s m/z (Found %(l)s)" % dict(m=mass, p=polarity, t=tolerance, l=len(metabolites)))
+        click.echo(pretty_table)
         return metabolites
     else:
         return []
+
+if __name__ == "__main__":
+    mass_search()

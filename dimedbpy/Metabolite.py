@@ -153,6 +153,7 @@ class Metabolite(object):
     def to_dict(self, flat=True, properties=[]):
         if flat == True:
             flat = self._identification_info
+            flat.update({"_id" : self._id})
             flat.update(self._physicochemical_properties)
             flat.update(self._external_sources)
             if len(properties) > 0:
