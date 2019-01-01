@@ -30,7 +30,7 @@ class Metabolite(object):
     @property
     def smiles(self):
         return self._identification_info["SMILES"]
-    
+
     @property
     def molecular_formula(self):
         return self._identification_info["Molecular Formula"]
@@ -166,7 +166,7 @@ class Metabolite(object):
     def from_inchikey(cls, inchikey):
         try:
             return Metabolite(_get_json("inchikey", inchikey)[0])
-        except IndexError, e:
+        except IndexError:
             import warnings
             warnings.warn("Incorrect identifier, no metabolite returned!")
 

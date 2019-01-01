@@ -33,7 +33,7 @@ def _get_json(identifier, namespace,):
         response = _request(identifier, namespace)
         if response.status_code == 200:
             return response.json()["_items"]
-    except Exception, e:
+    except Exception:
         return []
 
 def _metabolites_to_frame(metabolites, properties=["_id", "Name", "Molecular Formula"]):
