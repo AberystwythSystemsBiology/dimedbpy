@@ -5,7 +5,7 @@ setup(
     version='0.1.0',
     packages=['dimedbpy'],
     py_modules=['dimedbpy'],
-    url='https://www.github.com/KeironO/dimedbpy',
+    url='https://github.com/AberystwythSystemsBiology/dimedbpy',
     license='MIT',
     author='Keiron O\'Shea',
     author_email = 'keo7@aber.ac.uk',
