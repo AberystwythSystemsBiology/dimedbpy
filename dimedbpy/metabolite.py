@@ -1,4 +1,4 @@
-from methods import _get_json
+from .methods import _get_json
 
 class Metabolite(object):
     def __init__(self, record):
