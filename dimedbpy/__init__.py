@@ -5,7 +5,7 @@ Python interface for the DIMEdb REST service.
 https://github.com/KeironO/dimedbpy
 '''
 
-from metabolite import Metabolite
+from .metabolite import Metabolite
 import methods, click
 from prettytable import PrettyTable
 
