@@ -6,7 +6,7 @@ https://github.com/KeironO/dimedbpy
 '''
 
 from .metabolite import Metabolite
-import methods, click
+import .methods, click
 from prettytable import PrettyTable
 
 def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
