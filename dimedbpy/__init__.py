@@ -6,14 +6,15 @@ https://github.com/KeironO/dimedbpy
 '''
 
 from .metabolite import Metabolite
-import .methods, click
+from .methods import _request, _get_json, _metabolites_to_frame
+import click
 from prettytable import PrettyTable
 
 def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
-    results = methods._get_json(identifier, namespace)
+    results = _get_json(identifier, namespace)
     metabolites = [Metabolite(r) for r in results if r != None]
     if as_dataframe:
-        return methods._metabolites_to_frame(metabolites)
+        return _metabolites_to_frame(metabolites)
     return metabolites
 
 
@@ -43,11 +44,11 @@ def mass_search(mass, polarity, tolerance, adducts=None, as_dataframe=False):
 
     projection = '&projection={"Identification Information" : 1, "Physicochemical Properties" : 1, "External Sources" : 1, "Pathways" : 1, "Adducts.%(polarity)s.$":1}' % dict(polarity=polarity)
 
-    response = methods._request(sp=sp, projection=projection)
+    response = _request(sp=sp, projection=projection)
     if response.status_code == 200:
         metabolites = [Metabolite(r) for r in response.json()["_items"] if r!= None]
         if as_dataframe == True:
-            metabolites = methods._metabolites_to_frame(metabolites)
+            metabolites = _metabolites_to_frame(metabolites)
         pretty_table = PrettyTable()
         pretty_table._set_field_names(["InChIKey", "Name", "Molecular Formula"])
         for m in metabolites:
