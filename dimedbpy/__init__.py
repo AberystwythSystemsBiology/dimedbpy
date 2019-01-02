@@ -18,9 +18,9 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
 
 
 @click.command()
-@click.option("--mass", default=300, help="Mass-to-ion (m/z)", type=float)
-@click.option("--polarity", default="Neutral", help="Polarity/Ionisation (Positive, Negative, Neutral)", type=str)
-@click.option("--tolerance", default=0.25, help="+/- m/z tolerance")
+@click.option("--mass", default=100, help="Mass-to-ion (m/z)", type=float)
+@click.option("--polarity", default="Neutral",  help="Polarity/Ionisation (Positive, Negative, Neutral)", type=str)
+@click.option("--tolerance", default=0.05, help="+/- m/z tolerance")
 def mass_search(mass, polarity, tolerance, adducts=None, as_dataframe=False):
 
     gte = mass - tolerance
