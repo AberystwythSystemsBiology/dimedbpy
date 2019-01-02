@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='dimedbpy',
-    version='0.0.3',
+    version='0.1.0',
     packages=['dimedbpy'],
     py_modules=['dimedbpy'],
     url='https://www.github.com/KeironO/dimedbpy',
@@ -19,7 +19,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'Development Status :: 2 - Pre-Alpha',
+        'Programming Language :: Python :: 3',
+        'Development Status :: 3 - Alpha',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Science/Research',
