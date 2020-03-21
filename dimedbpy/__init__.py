@@ -22,24 +22,24 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
 @click.option("--mass", default=100, help="Mass-to-ion (m/z)", type=float)
 @click.option("--polarity", default="Neutral",  help="Polarity/Ionisation (Positive, Negative, Neutral)", type=str)
 @click.option("--tolerance", default=0.05, help="+/- m/z tolerance")
-def mass_search(mass, polarity, tolerance, adducts=None, as_dataframe=False):
+def mass_search(mass, polarity, tolerance, isotopic_distributions=None, as_dataframe=False):
 
     gte = mass - tolerance
     lte = mass + tolerance
 
     polarity = polarity.title()
 
-    if adducts == None:
+    if isotopic_distributions == None:
         common_adducts = {
             "Neutral" : ["[M]"],
             "Negative" : ["[M-H]1-", "[M+Cl]1-", "[M+Br]1+"],
             "Positive" : ["[M+H]1+", "[M+K]1+", "[M+Na]1+"]
         }
 
-        adducts = common_adducts[polarity]
+        isotopic_distributions = common_adducts[polarity]
 
-    sp = '"Adducts" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(adducts)s},' \
-         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}' % dict(polarity=polarity.title(),lte=lte, gte=gte, adducts=str(adducts).replace("'", '"'))
+    sp = '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(adducts)s},' \
+         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}' % dict(polarity=polarity.title(),lte=lte, gte=gte, isotopic_distributions=str(isotopic_distributions).replace("'", '"'))
 
 
     projection = '&projection={"Identification Information" : 1, "Physicochemical Properties" : 1, "External Sources" : 1, "Pathways" : 1, "Adducts.%(polarity)s.$":1}' % dict(polarity=polarity)
