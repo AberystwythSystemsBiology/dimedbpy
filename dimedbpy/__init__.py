@@ -1,14 +1,15 @@
-'''
+"""
 dimedbpy
 
 Python interface for the DIMEdb REST service.
 https://github.com/KeironO/dimedbpy
-'''
+"""
 
 from .metabolite import Metabolite
 from .methods import _request, _get_json, _metabolites_to_frame
 import click
 from prettytable import PrettyTable
+
 
 def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
     results = _get_json(identifier, namespace)
@@ -20,9 +21,16 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
 
 @click.command()
 @click.option("--mass", default=100, help="Mass-to-ion (m/z)", type=float)
-@click.option("--polarity", default="Neutral",  help="Polarity/Ionisation (Positive, Negative, Neutral)", type=str)
+@click.option(
+    "--polarity",
+    default="Neutral",
+    help="Polarity/Ionisation (Positive, Negative, Neutral)",
+    type=str,
+)
 @click.option("--tolerance", default=0.05, help="+/- m/z tolerance")
-def mass_search(mass, polarity, tolerance, isotopic_distributions=None, as_dataframe=False):
+def mass_search(
+    mass, polarity, tolerance, isotopic_distributions=None, as_dataframe=False
+):
 
     gte = mass - tolerance
     lte = mass + tolerance
@@ -31,22 +39,32 @@ def mass_search(mass, polarity, tolerance, isotopic_distributions=None, as_dataf
 
     if isotopic_distributions == None:
         common_adducts = {
-            "Neutral" : ["[M]"],
-            "Negative" : ["[M-H]1-", "[M+Cl]1-", "[M+Br]1+"],
-            "Positive" : ["[M+H]1+", "[M+K]1+", "[M+Na]1+"]
+            "Neutral": ["[M]"],
+            "Negative": ["[M-H]1-", "[M+Cl]1-", "[M+Br]1+"],
+            "Positive": ["[M+H]1+", "[M+K]1+", "[M+Na]1+"],
         }
 
         isotopic_distributions = common_adducts[polarity]
 
-    sp = '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(adducts)s},' \
-         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}' % dict(polarity=polarity.title(),lte=lte, gte=gte, isotopic_distributions=str(isotopic_distributions).replace("'", '"'))
+    sp = (
+        '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(adducts)s},'
+        '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}'
+        % dict(
+            polarity=polarity.title(),
+            lte=lte,
+            gte=gte,
+            isotopic_distributions=str(isotopic_distributions).replace("'", '"'),
+        )
+    )
 
-
-    projection = '&projection={"Identification Information" : 1, "Physicochemical Properties" : 1, "External Sources" : 1, "Pathways" : 1, "Adducts.%(polarity)s.$":1}' % dict(polarity=polarity)
+    projection = (
+        '&projection={"Identification Information" : 1, "Physicochemical Properties" : 1, "External Sources" : 1, "Pathways" : 1, "Adducts.%(polarity)s.$":1}'
+        % dict(polarity=polarity)
+    )
 
     response = _request(sp=sp, projection=projection)
     if response.status_code == 200:
-        metabolites = [Metabolite(r) for r in response.json()["_items"] if r!= None]
+        metabolites = [Metabolite(r) for r in response.json()["_items"] if r != None]
         if as_dataframe == True:
             metabolites = _metabolites_to_frame(metabolites)
         pretty_table = PrettyTable()
@@ -54,11 +72,15 @@ def mass_search(mass, polarity, tolerance, isotopic_distributions=None, as_dataf
         for m in metabolites:
             pretty_table.add_row([m._id, m.name, m.molecular_formula])
 
-        click.echo("Mass-to-ion: %(m)s, Polarity: %(p)s, Tolerance: %(t)s m/z (Found %(l)s)" % dict(m=mass, p=polarity, t=tolerance, l=len(metabolites)))
+        click.echo(
+            "Mass-to-ion: %(m)s, Polarity: %(p)s, Tolerance: %(t)s m/z (Found %(l)s)"
+            % dict(m=mass, p=polarity, t=tolerance, l=len(metabolites))
+        )
         click.echo(pretty_table)
         return metabolites
     else:
         return []
+
 
 if __name__ == "__main__":
     mass_search()
