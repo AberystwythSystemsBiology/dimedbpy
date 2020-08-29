@@ -1,5 +1,5 @@
-import requests, pandas as pd
-
+import requests
+import pandas as pd
 
 PROPERTY_MAP = {
     "inchikey": '"_id"',
@@ -40,7 +40,6 @@ def _get_json(namespace, identifier):
     response = _request(namespace, identifier)
     if response.status_code == 200:
         return response.json()["_items"]
-
     return response.content
 
 

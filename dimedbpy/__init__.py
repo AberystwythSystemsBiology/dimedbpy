@@ -8,6 +8,7 @@ https://github.com/KeironO/dimedbpy
 from .metabolite import Metabolite
 from .methods import _request, _get_json, _metabolites_to_frame
 from prettytable import PrettyTable
+from urllib.parse import quote
 
 
 def get_metabolites(namespace, identifier, as_dataframe=False):
@@ -21,10 +22,13 @@ def get_metabolites(namespace, identifier, as_dataframe=False):
 def mass_search(
     mass: float = 69.420,
     polarity: str = "positive",
-    tolerance: float = 0.2,
+    tolerance: float = 1.00,
     isotopic_distributions=None,
     as_dataframe=False,
 ):
+
+    if tolerance > 30.00:
+        raise AttributeError("Sorry, but due to abuse the maximum tolerance is now restricted to +/- 30 m/z.")
 
     gte = mass - tolerance
     lte = mass + tolerance
@@ -34,14 +38,14 @@ def mass_search(
     if isotopic_distributions == None:
         common_adducts = {
             "Neutral": ["[M]"],
-            "Negative": ["[M-H]1-", "[M+Cl]1-", "[M+Br]1+"],
+            "Negative": ["[M-H]1-", "[M+Cl]1-", "[M+Br]1-"],
             "Positive": ["[M+H]1+", "[M+K]1+", "[M+Na]1+"],
         }
 
         isotopic_distributions = common_adducts[polarity]
 
     sp = (
-        '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)s},'
+        '"Adducts" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)s},'
         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}'
         % dict(
             polarity=polarity.title(),
@@ -55,7 +59,6 @@ def mass_search(
         '&projection={"Identification Information" : 1, "Physicochemical Properties" : 1, "External Sources" : 1, "Pathways" : 1, "Adducts.%(polarity)s.$":1}'
         % dict(polarity=polarity)
     )
-
     response = _request(sp=sp, projection=projection)
     if response.status_code == 200:
         metabolites = [Metabolite(r) for r in response.json()["_items"] if r != None]
@@ -65,7 +68,6 @@ def mass_search(
         pretty_table._set_field_names(["InChIKey", "Name", "Molecular Formula"])
         for m in metabolites:
             pretty_table.add_row([m._id, m.name, m.molecular_formula])
-
         return metabolites
     else:
-        return []
+        return {"Error": response.status_code}
