@@ -7,7 +7,6 @@ https://github.com/KeironO/dimedbpy
 
 from .metabolite import Metabolite
 from .methods import _request, _get_json, _metabolites_to_frame
-import click
 from prettytable import PrettyTable
 
 
@@ -19,17 +18,8 @@ def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
     return metabolites
 
 
-@click.command()
-@click.option("--mass", default=100, help="Mass-to-ion (m/z)", type=float)
-@click.option(
-    "--polarity",
-    default="Neutral",
-    help="Polarity/Ionisation (Positive, Negative, Neutral)",
-    type=str,
-)
-@click.option("--tolerance", default=0.05, help="+/- m/z tolerance")
 def mass_search(
-    mass, polarity, tolerance, isotopic_distributions=None, as_dataframe=False
+    mass: float=69.420, polarity: str="positive", tolerance: float = 0.2, isotopic_distributions=None, as_dataframe=False
 ):
 
     gte = mass - tolerance
@@ -82,5 +72,3 @@ def mass_search(
         return []
 
 
-if __name__ == "__main__":
-    mass_search()
