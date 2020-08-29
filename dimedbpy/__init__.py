@@ -11,7 +11,7 @@ from prettytable import PrettyTable
 
 
 def get_metabolites(namespace, identifier, as_dataframe=False):
-    results = _get_json(namespace.lower(), identifier )
+    results = _get_json(namespace.lower(), identifier)
     metabolites = [Metabolite(r) for r in results if r != None]
     if as_dataframe:
         return _metabolites_to_frame(metabolites)
@@ -19,7 +19,11 @@ def get_metabolites(namespace, identifier, as_dataframe=False):
 
 
 def mass_search(
-    mass: float=69.420, polarity: str="positive", tolerance: float = 0.2, isotopic_distributions=None, as_dataframe=False
+    mass: float = 69.420,
+    polarity: str = "positive",
+    tolerance: float = 0.2,
+    isotopic_distributions=None,
+    as_dataframe=False,
 ):
 
     gte = mass - tolerance
@@ -35,7 +39,6 @@ def mass_search(
         }
 
         isotopic_distributions = common_adducts[polarity]
-
 
     sp = (
         '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)s},'
@@ -66,5 +69,3 @@ def mass_search(
         return metabolites
     else:
         return []
-
-

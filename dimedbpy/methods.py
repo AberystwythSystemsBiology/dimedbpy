@@ -26,21 +26,22 @@ def _request(namespace=None, identifier=None, sp=None, projection=None):
     url = API_BASE % dict(search_param=sp)
     if projection != None:
         url += projection
-
-    print(url)
     return requests.get(url)
 
 
 def _get_json(namespace, identifier):
 
     if namespace not in PROPERTY_MAP.keys():
-        raise AttributeError("%s not in namespace. Namespace is can be one of %s" % (identifier, ", ".join(PROPERTY_MAP.keys())))
-    try:
-        response = _request(namespace, identifier)
-        if response.status_code == 200:
-            return response.json()["_items"]
-    except Exception:
-        return []
+        raise AttributeError(
+            "%s not in namespace. Namespace is can be one of %s"
+            % (identifier, ", ".join(PROPERTY_MAP.keys()))
+        )
+
+    response = _request(namespace, identifier)
+    if response.status_code == 200:
+        return response.json()["_items"]
+
+    return response.content
 
 
 def _metabolites_to_frame(metabolites, properties=["_id", "Name", "Molecular Formula"]):
