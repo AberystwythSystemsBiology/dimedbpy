@@ -26,6 +26,8 @@ def _request(namespace=None, identifier=None, sp=None, projection=None):
     url = API_BASE % dict(search_param=sp)
     if projection != None:
         url += projection
+
+    print(url)
     return requests.get(url)
 
 

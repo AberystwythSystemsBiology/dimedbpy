@@ -44,6 +44,8 @@ def mass_search(
 
         isotopic_distributions = common_adducts[polarity]
 
+    isotopic_distributions = [quote(x) for x in isotopic_distributions]
+
     sp = (
         '"Adducts" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)s},'
         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}'
