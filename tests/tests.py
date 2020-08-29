@@ -3,9 +3,16 @@ import dimedbpy
 
 class RunTest(unittest.TestCase):
 
-    def test_get_metabolites(self):
-        metabolte = dimedbpy.get_metabolites("NAme", "Sucrose")
-        print(metabolte)
+    def test_get_metabolite_by_name(self):
+        metabolte = dimedbpy.get_metabolites("name", "Sucrose")
+        # Assert that Sucrose has been found
+        self.assertNotEqual(len(metabolte), 0)
+        # Assert that the mol form is C12H22O11.
+        self.assertTrue(metabolte[0].molecular_formula == "C12H22O11")
+
+    def test_mass_search(self):
+        metabolites = dimedbpy.mass_search(200)
+        print(metabolites)
 
 if __name__ == '__main__':
     unittest.main()

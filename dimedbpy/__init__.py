@@ -36,8 +36,9 @@ def mass_search(
 
         isotopic_distributions = common_adducts[polarity]
 
+
     sp = (
-        '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)},'
+        '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)s},'
         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}'
         % dict(
             polarity=polarity.title(),
