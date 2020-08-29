@@ -10,8 +10,8 @@ from .methods import _request, _get_json, _metabolites_to_frame
 from prettytable import PrettyTable
 
 
-def get_metabolites(identifier, namespace="inchikey", as_dataframe=False):
-    results = _get_json(identifier, namespace)
+def get_metabolites(namespace, identifier, as_dataframe=False):
+    results = _get_json(namespace.lower(), identifier )
     metabolites = [Metabolite(r) for r in results if r != None]
     if as_dataframe:
         return _metabolites_to_frame(metabolites)
@@ -37,7 +37,7 @@ def mass_search(
         isotopic_distributions = common_adducts[polarity]
 
     sp = (
-        '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(adducts)s},'
+        '"Isotopic Distributions" : {"$elemMatch" : {"Polarity" : "%(polarity)s", "Adduct" : {"$in" : %(isotopic_distributions)},'
         '"Accurate Mass" : {"$lte" : %(lte)s, "$gte" : %(gte)s}}}'
         % dict(
             polarity=polarity.title(),
@@ -62,11 +62,6 @@ def mass_search(
         for m in metabolites:
             pretty_table.add_row([m._id, m.name, m.molecular_formula])
 
-        click.echo(
-            "Mass-to-ion: %(m)s, Polarity: %(p)s, Tolerance: %(t)s m/z (Found %(l)s)"
-            % dict(m=mass, p=polarity, t=tolerance, l=len(metabolites))
-        )
-        click.echo(pretty_table)
         return metabolites
     else:
         return []

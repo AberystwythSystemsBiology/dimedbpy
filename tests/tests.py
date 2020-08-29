@@ -1,10 +1,11 @@
 import unittest
+import dimedbpy
 
-from dimedbpy import get_metabolites
+class RunTest(unittest.TestCase):
 
-class Test(unittest.TestCase):
-    def test(self):
-        self.assertAlmostEqual(1, 1)
+    def test_get_metabolites(self):
+        metabolte = dimedbpy.get_metabolites("NAme", "Sucrose")
+        print(metabolte)
 
 if __name__ == '__main__':
     unittest.main()

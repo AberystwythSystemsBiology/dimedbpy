@@ -29,11 +29,12 @@ def _request(namespace=None, identifier=None, sp=None, projection=None):
     return requests.get(url)
 
 
-def _get_json(
-    identifier, namespace,
-):
+def _get_json(namespace, identifier):
+
+    if namespace not in PROPERTY_MAP.keys():
+        raise AttributeError("%s not in namespace. Namespace is can be one of %s" % (identifier, ", ".join(PROPERTY_MAP.keys())))
     try:
-        response = _request(identifier, namespace)
+        response = _request(namespace, identifier)
         if response.status_code == 200:
             return response.json()["_items"]
     except Exception:
