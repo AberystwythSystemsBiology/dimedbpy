@@ -1,4 +1,4 @@
-numpy==1.18.1
+numpy==1.22.0
 pandas==0.25.0
 prettytable==0.7.2
 requests==2.24.0
